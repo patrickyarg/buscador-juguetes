@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscador de Juguetes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
 
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-md">
+    <h1 class="text-3xl font-bold text-blue-600 mb-4 text-center">🎁 Encuentra el Juguete Ideal</h1>
+
+    <form id="filtroForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Edad:</label>
+        <select name="edad" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          <option value="">Cualquiera</option>
+          <option value="1-3">1 a 3 años</option>
+          <option value="4-6">4 a 6 años</option>
+          <option value="7-9">7 a 9 años</option>
+          <option value="10+">10 años o más</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Preferencia:</label>
+        <select name="preferencia" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          <option value="">Cualquiera</option>
+          <option value="educativo">Educativo</option>
+          <option value="creativo">Creativo</option>
+          <option value="aventura">Aventura</option>
+        </select>
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Personaje favorito:</label>
+        <input type="text" name="personaje" placeholder="Ej: Spiderman, Frozen..." class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Sexo:</label>
+        <select name="sexo" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          <option value="">Sin especificar</option>
+          <option value="niño">Niño</option>
+          <option value="niña">Niña</option>
+        </select>
+      </div>
+
+      <div class="sm:col-span-2 text-center mt-4">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">🔍 Buscar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="max-w-3xl mx-auto mt-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Resultados:</h2>
+    <div id="resultados" class="space-y-4"></div>
+  </div>
+
+  <script>
+    const juguetes = [
+      { nombre: "Lego Creativo", edad: "4-6", preferencia: "creativo", personaje: "", sexo: "" },
+      { nombre: "Rompecabezas Educativo", edad: "7-9", preferencia: "educativo", personaje: "", sexo: "" },
+      { nombre: "Muñeca Elsa", edad: "4-6", preferencia: "aventura", personaje: "Frozen", sexo: "niña" },
+      { nombre: "Coche RC Spiderman", edad: "7-9", preferencia: "aventura", personaje: "Spiderman", sexo: "niño" },
+      { nombre: "Tablet Infantil", edad: "10+", preferencia: "educativo", personaje: "", sexo: "" }
+    ];
+
+    document.getElementById("filtroForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const edad = form.edad.value;
+      const preferencia = form.preferencia.value;
+      const personaje = form.personaje.value.toLowerCase();
+      const sexo = form.sexo.value;
+
+      const resultados = juguetes.filter(j => {
+        return (!edad || j.edad === edad) &&
+               (!preferencia || j.preferencia === preferencia) &&
+               (!personaje || j.personaje.toLowerCase().includes(personaje)) &&
+               (!sexo || j.sexo === sexo);
+      });
+
+      const resultadosDiv = document.getElementById("resultados");
+      resultadosDiv.innerHTML = resultados.length
+        ? resultados.map(j => `
+          <div class="bg-white p-4 rounded-xl shadow">
+            <h3 class="text-lg font-semibold text-blue-700">${j.nombre}</h3>
+            <p class="text-gray-600">Edad: ${j.edad} | Preferencia: ${j.preferencia}</p>
+            ${j.personaje ? `<p class="text-gray-500">Personaje: ${j.personaje}</p>` : ""}
+          </div>
+        `).join("")
+        : "<p class='text-gray-600'>No se encontraron juguetes con esos criterios.</p>";
+    });
+  </script>
+
+</body>
+</html>
